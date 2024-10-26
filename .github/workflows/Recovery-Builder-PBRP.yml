@@ -96,7 +96,7 @@ jobs:
         
     - name: Repo Sync
       run: |
-        repo sync -j$(nproc --all) --force-sync
+        repo sync -f -j4
       working-directory: workspace
 
     - name: Building Recovery
