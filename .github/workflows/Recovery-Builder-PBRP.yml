@@ -91,7 +91,7 @@ jobs:
         echo "workdir=$(pwd)" >> $GITHUB_OUTPUT
         git config --global user.name "TheoLuc"
         git config --global user.email "theodoreluchy@gmail.com"
-        repo init --depth=1 -u ${{ github.event.inputs.MANIFEST_URL }} -b ${{ github.event.inputs.MANIFEST_BRANCH }}
+        repo init --depth=1 -u ${{ github.event.inputs.MANIFEST_URL }} -b arcadia-x86 --git-lfs
       id: pwd
         
     - name: Repo Sync
