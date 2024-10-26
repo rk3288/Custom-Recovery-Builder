@@ -22,9 +22,6 @@ on:
         required: true
         default: ''
         type: choice
-        options:
-        - android-12.1
-        - android-11
       DEVICE_TREE:
         description: 'Custom Recovery Tree' # Your already made Device Tree for TWRP
         required: true
@@ -121,14 +118,14 @@ jobs:
       
     - name: Renaming into PBRP
       run: |
-        cd out/target/product/${{ github.event.inputs.DEVICE_NAME }}
+        cd out/target/product/system.img
         mv vendor_boot.img ${{ github.event.inputs.MANIFEST_BRANCH }}-3.7.0-${{ github.event.inputs.DEVICE_NAME }}-${{ steps.props.outputs.date }}.img
       working-directory: ${{ steps.pwd.outputs.workdir }}
       
     - name: Upload to Release
       uses: ncipollo/release-action@v1.11.1
       with:
-        artifacts: workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/${{ github.event.inputs.MANIFEST_BRANCH }}*.img
+        artifacts: workspace/out/target/product/system.img
         name: Unofficial PBRP for ${{ github.event.inputs.DEVICE_NAME }} - Build ${{ steps.props.outputs.date }} / ${{ github.run_id }}
         draft: false
         prerelease: true
