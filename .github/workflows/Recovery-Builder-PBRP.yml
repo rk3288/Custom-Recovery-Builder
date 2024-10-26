@@ -16,7 +16,7 @@ on:
         default: ''
         type: choice
         options:
-        - https://github.com/PitchBlackRecoveryProject/manifest_pb.git
+        - https://github.com/BlissRoms-x86/manifest.git
       MANIFEST_BRANCH:
         description: 'Manifest Branch'
         required: true
@@ -87,8 +87,7 @@ jobs:
 
     - name: Install OpenJDK
       run: |
-        git clone https://github.com/cd-Spidey/Random.git ./opendjk
-        sudo bash opendjk/setup/packages/open_jdk.sh
+        sudo apt-get install openjdk-8-jdk
         
     - name: Install Git-Repo
       run: |
@@ -111,32 +110,12 @@ jobs:
       run: |
         repo sync -j$(nproc --all) --force-sync
       working-directory: workspace
-      
-    - name: Clone Device Tree
-      run: |
-        git clone ${{ github.event.inputs.DEVICE_TREE }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
-      working-directory: ${{ steps.pwd.outputs.workdir }}
-
-    - name: Check Build Tree
-      uses: haya14busa/action-cond@v1
-      id: buildtree
-      with:
-        cond: ${{ github.event.inputs.MANIFEST_BRANCH == 'twrp-11' || github.event.inputs.MANIFEST_BRANCH == 'twrp-12.1' }}
-        if_true: twrp
-        if_false: omni
-
-    - name: Sync Dependencies
-      run: |
-        bash ${GITHUB_WORKSPACE}/scripts/convert.sh ${{ github.event.inputs.DEVICE_PATH }}/${{ steps.buildtree.outputs.value }}.dependencies
-        repo sync -j$(nproc --all)
-      working-directory: ${{ steps.pwd.outputs.workdir }}
-      continue-on-error: true
 
     - name: Building Recovery
       run: |
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && make ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all)
+        lunch 6 && make clean && make -j8
       working-directory: ${{ steps.pwd.outputs.workdir }}
       
     - name: Set Properties # Output will be use in final name of recovery.
